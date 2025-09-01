@@ -121,11 +121,12 @@ app.get("/api/rapports/stock", authMiddleware(["admin"]), async (req, res) => {
   }
 });
 
-
+// Rapport complet
 app.get("/api/rapports/complet", authMiddleware(["admin"]), async (req, res) => {
   try {
     // Récupérer toutes les ventes avec les produits associés
     const ventes = await Vente.findAll({ include: Produit });
+
     let benefices = 0;
     ventes.forEach(v => {
       benefices += (v.Produit.prix_vente - v.Produit.prix_achat) * v.quantite;
@@ -138,8 +139,8 @@ app.get("/api/rapports/complet", authMiddleware(["admin"]), async (req, res) => 
 
     res.json({
       benefices,
-      produits,
-      totalVentes: ventes.length
+      totalVentes: ventes.length,
+      produits
     });
   } catch (err) {
     console.error("Erreur rapport complet :", err);
